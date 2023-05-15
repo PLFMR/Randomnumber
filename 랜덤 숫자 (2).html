@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>랜덤 숫자</title>
+    <style>
+      /* 중복 텍스트 스타일 */
+      .duplicate {
+        font-size: 0.5em;
+        color: red;
+      }
+      /* 숫자 범위 입력창 스타일 */
+      #number-range {
+        margin: 20px 0;
+        padding: 10px;
+        border: 1px solid black;
+        width: 200px;
+        box-sizing: border-box;
+      }
+      #number-range label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      #number-range input[type="number"] {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>랜덤 숫자</h1>
+    <div id="number-range">
+      <label for="min-input">최소값:</label>
+      <input type="number" id="min-input">
+      <label for="max-input">최대값:</label>
+      <input type="number" id="max-input">
+    </div>
+    <div id="result"></div>
+    <script>
+      let prevNumber;
+      
+      // 범위 내에서 랜덤 숫자 생성 함수
+      function getRandomNumber(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      // 숫자 뽑기와 화면에 출력 함수
+      function pickNumber() {
+        const min = parseInt(document.getElementById("min-input").value);
+        const max = parseInt(document.getElementById("max-input").value);
+        if (isNaN(min) || isNaN(max) || min >= max) {
+          alert("올바른 범위를 입력하세요.");
+          return;
+        }
+        let randomNumber;
+        do {
+          randomNumber = getRandomNumber(min, max);
+        } while (randomNumber === prevNumber);
+        const resultDiv = document.getElementById("result");
+        resultDiv.textContent = randomNumber;
+        resultDiv.style.fontSize = "3em";
+        resultDiv.style.color = getRandomColor();
+        if (prevNumber && prevNumber === randomNumber) {
+          const duplicateSpan = document.createElement("span");
+          duplicateSpan.textContent = "중복";
+          duplicateSpan.classList.add("duplicate");
+          resultDiv.appendChild(duplicateSpan);
+        }
+        prevNumber = randomNumber;
+      }
+
+      // 랜덤 색상 생성 함수
+      function getRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+      }
+
+      // 버튼 클릭 시 숫자 뽑기 함수 호출
+      const button = document.createElement("button");
+      button.textContent = "숫자 뽑기";
+      button.addEventListener("click", pickNumber);
+      document.body.appendChild(button);
+    </script>
+  </body>
+</html>
